@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Process — CAD Express | Home Renovation &amp; Architectural Design</title>
+    <meta name="description" content="Discover CAD Express's 6-step process — from the first conversation to the final walkthrough. Transparent, communicative, and backed by 26 years of expertise." />
+
+    <!-- Fonts (matches reference site) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              accent: '#FA4A49',
+              'accent-h': '#FB6A6A',
+            },
+            maxWidth: { site: '1280px' },
+          },
+        },
+      };
+    </script>
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+      /* ─── Base ─── */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Inter', sans-serif; background: #fff; color: #000; margin: 0; }
+
+      /* ─── Typography Scale (exact mirror of reference site) ─── */
+      .text-display   { font-size: clamp(36px,4.5vw,56px);  font-weight: 700; line-height: 1.1;  letter-spacing: -0.02em; }
+      .text-heading-l { font-size: clamp(28px,3.5vw,40px);  font-weight: 600; line-height: 1.2;  letter-spacing: -0.01em; }
+      .text-heading-m { font-size: 24px;  font-weight: 600; line-height: 1.3;  letter-spacing: -0.01em; }
+      .text-heading-s { font-size: 20px;  font-weight: 500; line-height: 1.3; }
+      .text-body-l    { font-size: 18px;  font-weight: 400; line-height: 1.65; }
+      .text-body-m    { font-size: 16px;  font-weight: 400; line-height: 1.6; }
+      .text-body-s    { font-size: 14px;  font-weight: 400; line-height: 1.5; }
+      .text-label     { font-size: 12px;  font-weight: 500; line-height: 1.4;  letter-spacing: 0.08em; text-transform: uppercase; }
+      .text-stat      { font-size: clamp(64px,8vw,96px);    font-weight: 700; line-height: 1;    letter-spacing: -0.03em; }
+      .text-hero      { font-size: clamp(32px,8vw,72px);    font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; }
+
+      /* ─── Layout ─── */
+      .site-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+      @media (min-width: 1024px) { .site-container { padding: 0 48px; } }
+
+      /* ─── Nav ─── */
+      #site-nav { transition: background-color 0.5s ease, backdrop-filter 0.5s ease; }
+      #site-nav.scrolled {
+        background-color: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(10px) !important;
+      }
+      .nav-link {
+        position: relative;
+        padding-bottom: 4px;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 0; height: 1px;
+        background: #FA4A49;
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover::after { width: 100%; }
+
+      /* ─── Hamburger ─── */
+      #mobile-menu { display: none; }
+      #mobile-menu.open { display: block; }
+      #hamburger-bar-1,
+      #hamburger-bar-2,
+      #hamburger-bar-3 { transition: transform 0.3s ease, opacity 0.3s ease; }
+      #hamburger.open #hamburger-bar-1 { transform: translateY(7px) rotate(45deg); }
+      #hamburger.open #hamburger-bar-2 { opacity: 0; }
+      #hamburger.open #hamburger-bar-3 { transform: translateY(-7px) rotate(-45deg); }
+
+      /* ─── Process step layout ─── */
+      .step-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 64px 0 72px;
+      }
+      @media (min-width: 1024px) {
+        .step-row {
+          grid-template-columns: 5fr 7fr;
+          padding: 96px 0 104px;
+          gap: 0;
+        }
+        .step-row.flip { grid-template-columns: 7fr 5fr; }
+        .step-row.flip .step-img-col { order: 2; }
+        .step-row.flip .step-txt-col { order: 1; }
+      }
+
+      /* ─── Step image column ─── */
+      .step-img-col { order: 1; }
+      .step-txt-col { order: 2; }
+      @media (max-width: 1023px) {
+        .step-img-col { margin-bottom: 32px; }
+      }
+
+      /* ─── Step image ─── */
+      .step-img-wrap {
+        position: relative;
+        overflow: hidden;
+        height: 440px;
+      }
+      @media (max-width: 767px) { .step-img-wrap { height: 280px; } }
+      .step-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s ease;
+        will-change: transform;
+      }
+      .step-img-wrap:hover img { transform: scale(1.03); }
+
+      /* ─── Content col padding ─── */
+      @media (min-width: 1024px) {
+        .step-row:not(.flip) .step-img-col  { padding-right: 56px; }
+        .step-row:not(.flip) .step-txt-col  { padding-left:  56px; }
+        .step-row.flip      .step-txt-col   { padding-right: 56px; }
+        .step-row.flip      .step-img-col   { padding-left:  56px; }
+      }
+
+      /* ─── Step number watermark ─── */
+      .step-watermark {
+        position: absolute;
+        right: -8px;
+        top: -24px;
+        font-size: clamp(96px, 16vw, 180px);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        color: rgba(250, 74, 73, 0.055);
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
+      }
+      .step-row.flip .step-watermark {
+        right: auto;
+        left: -8px;
+      }
+
+      /* ─── Pill tags ─── */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 14px;
+        border: 1px solid #D4D4D4;
+        border-radius: 2px;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: #8A8A8A;
+        white-space: nowrap;
+      }
+
+      /* ─── CTA buttons ─── */
+      .btn-primary {
+        display: inline-block;
+        padding: 14px 32px;
+        background: #FA4A49;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border: 1px solid transparent;
+        text-align: center;
+      }
+      .btn-primary:hover { background: #FB6A6A; }
+
+      .btn-secondary {
+        display: inline-block;
+        padding: 14px 32px;
+        background: transparent;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        text-align: center;
+      }
+      .btn-secondary:hover {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+      }
+
+      /* ─── Step card hover ─── */
+      .step-row {
+        transition: transform 0.3s ease;
+        cursor: default;
+      }
+
+      /* ─── Divider ─── */
+      .divider-light { width: 100%; height: 1px; background: #E0E0E0; }
+      .divider-dark  { width: 100%; height: 1px; background: #333; }
+
+      /* ─── Loading screen ─── */
+      #loader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        background: #000;
+      }
+      #loader-bar-track { width: 192px; height: 2px; background: #333; border-radius: 9999px; overflow: hidden; }
+      #loader-bar-fill  { height: 100%; background: #FA4A49; width: 0; }
+
+      /* ─── Reduce motion ─── */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PAGE LOADER                                 -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="loader" aria-hidden="true">
+      <img
+        src="https://cad-new-3d.vercel.app/images/CAD-Express-Logo-B.png"
+        alt=""
+        style="height: 40px; width: auto; margin-bottom: 32px; filter: brightness(0) invert(1);"
+      />
+      <div id="loader-bar-track">
+        <div id="loader-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- NAVIGATION                                  -->
+    <!-- ══════════════════════════════════════════ -->
+    <nav
+      id="site-nav"
+      role="navigation"
+      aria-label="Main navigation"
+      class="fixed top-0 left-0 w-full z-50"
+      style="background-color: transparent; backdrop-filter: none;"
+    >
+      <div class="site-container" style="display:flex; align-items:center; justify-content:space-between; padding-top:16px; padding-bottom:16px;">
+        <!-- Logo -->
+        <a href="https://cad-new-3d.vercel.app" style="display:inline-flex; flex-shrink:0; transition: transform 0.3s ease;" onmouseenter="this.style.transform='scale(1.02)'" onmouseleave="this.style.transform='scale(1)'">
+          <img
+            src="https://cad-new-3d.vercel.app/images/CAD-Express-Logo-B.png"
+            alt="CAD Express"
+            style="height: 36px; width: auto; filter: brightness(0) invert(1);"
+          />
+        </a>
+
+        <!-- Desktop links -->
+        <div id="desktop-nav">
+          <a href="https://cad-new-3d.vercel.app" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Home</a>
+          <a href="https://cad-new-3d.vercel.app/#gallery" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Gallery</a>
+          <a href="https://cad-new-3d.vercel.app/#about-detail" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">About</a>
+          <a href="https://cad-new-3d.vercel.app/renovation" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Renovation</a>
+          <a href="https://cad-new-3d.vercel.app/case-studies" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Case Studies</a>
+          <a href="https://cad-new-3d.vercel.app/contact" class="text-label nav-link" style="color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Contact</a>
+          <a href="https://cad-new-3d.vercel.app/request-service" style="padding: 8px 20px; background: #FA4A49; color: #fff; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; border-radius:4px; text-decoration:none; transition: background 0.3s ease;" onmouseenter="this.style.background='#FB6A6A'" onmouseleave="this.style.background='#FA4A49'">Request</a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button
+          id="hamburger"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          style="display:flex; flex-direction:column; gap:6px; padding:8px; background:none; border:none; cursor:pointer;"
+          class="lg:hidden"
+        >
+          <span id="hamburger-bar-1" style="display:block; width:20px; height:2px; background:#fff; border-radius:1px;"></span>
+          <span id="hamburger-bar-2" style="display:block; width:20px; height:2px; background:#fff; border-radius:1px;"></span>
+          <span id="hamburger-bar-3" style="display:block; width:20px; height:2px; background:#fff; border-radius:1px;"></span>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" style="background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); padding: 0 16px 24px; border-top: 1px solid #222;">
+        <a href="https://cad-new-3d.vercel.app" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'">Home</a>
+        <a href="https://cad-new-3d.vercel.app/#gallery" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;">Gallery</a>
+        <a href="https://cad-new-3d.vercel.app/#about-detail" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;">About</a>
+        <a href="https://cad-new-3d.vercel.app/renovation" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;">Renovation</a>
+        <a href="https://cad-new-3d.vercel.app/case-studies" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;">Case Studies</a>
+        <a href="https://cad-new-3d.vercel.app/contact" style="display:block; padding: 12px 0; border-bottom: 1px solid #222; text-decoration:none;" class="text-label" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.6)'" style="color: rgba(255,255,255,0.6); transition:color 0.3s ease;">Contact</a>
+        <a href="https://cad-new-3d.vercel.app/request-service" style="display:block; text-align:center; margin-top:16px; padding: 12px 20px; background: #FA4A49; color: #fff; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; border-radius:4px; text-decoration:none; transition: background 0.3s ease;" onmouseenter="this.style.background='#FB6A6A'" onmouseleave="this.style.background='#FA4A49'">Request</a>
+      </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- HERO                                        -->
+    <!-- ══════════════════════════════════════════ -->
+    <section
+      aria-label="Page hero"
+      style="position:relative; width:100%; height:100dvh; min-height:600px; overflow:hidden;"
+    >
+      <!-- Parallax background -->
+      <div
+        id="hero-bg"
+        style="
+          position:absolute; inset:-15% 0;
+          background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80');
+          background-size:cover; background-position:center;
+          will-change: transform;
+        "
+        aria-hidden="true"
+      ></div>
+
+      <!-- Overlay -->
+      <div style="position:absolute; inset:0; background:rgba(0,0,0,0.58); z-index:1;" aria-hidden="true"></div>
+
+      <!-- Content -->
+      <div
+        class="site-container"
+        style="position:relative; height:100%; display:flex; flex-direction:column; justify-content:center; z-index:2;"
+      >
+        <div style="max-width: 660px;">
+          <!-- Page label -->
+          <p id="h-label" class="text-label" style="color:rgba(255,255,255,0.5); margin-bottom:20px; opacity:0;">Our Process</p>
+
+          <!-- Headline split across two lines for typographic rhythm -->
+          <h1 style="margin:0;">
+            <span id="h-line1" class="text-hero" style="display:block; color:#fff; opacity:0;">From First Call</span>
+            <span id="h-line2" class="text-hero" style="display:block; color:#fff; opacity:0;">to Finished Project</span>
+          </h1>
+
+          <!-- Subheadline -->
+          <p
+            id="h-sub"
+            class="text-body-l"
+            style="margin-top:24px; max-width:520px; color:rgba(255,255,255,0.7); opacity:0;"
+          >
+            A process built around you — transparent, communicative, and crafted with 26 years of expertise.
+          </p>
+
+          <!-- CTA -->
+          <a
+            id="h-cta"
+            href="#process"
+            class="btn-primary"
+            style="margin-top:32px; opacity:0; display:inline-block;"
+          >See How It Works</a>
+        </div>
+      </div>
+
+      <!-- Year stat — bottom left -->
+      <div
+        id="h-year"
+        style="position:absolute; bottom:40px; left:24px; z-index:2; opacity:0;"
+      >
+        <p class="text-stat" style="color:#fff; margin:0;">26</p>
+        <p class="text-label" style="color:rgba(255,255,255,0.6); margin-top:4px;">Years of Experience</p>
+      </div>
+
+      <!-- Scroll indicator — bottom right -->
+      <div
+        id="h-scroll"
+        style="position:absolute; bottom:40px; right:24px; z-index:2; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0;"
+        aria-hidden="true"
+      >
+        <span class="text-label" style="color:rgba(255,255,255,0.4); writing-mode:vertical-rl; letter-spacing:0.15em;">Scroll</span>
+        <div style="width:1px; height:36px; background:rgba(255,255,255,0.4); animation: pulse 2s ease-in-out infinite;"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- STATS STRIP                                 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section
+      aria-label="Key figures"
+      style="position:relative; background:#1A1A1A; padding:56px 0;"
+    >
+      <div class="site-container">
+        <div class="divider-dark" style="margin-bottom:48px;"></div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:32px;" class="md:grid-cols-4" id="stats-grid">
+          <div class="stat-item" style="text-align:center; opacity:0;">
+            <p class="text-stat" style="color:#fff; margin:0;">26</p>
+            <p class="text-label" style="color:rgba(255,255,255,0.5); margin-top:8px;">Years in Business</p>
+          </div>
+          <div class="stat-item" style="text-align:center; opacity:0;">
+            <p class="text-stat" style="color:#fff; margin:0;">6</p>
+            <p class="text-label" style="color:rgba(255,255,255,0.5); margin-top:8px;">Clear Steps</p>
+          </div>
+          <div class="stat-item" style="text-align:center; opacity:0;">
+            <p class="text-stat" style="color:#FA4A49; margin:0;">0</p>
+            <p class="text-label" style="color:rgba(255,255,255,0.5); margin-top:8px;">Hidden Surprises</p>
+          </div>
+          <div class="stat-item" style="text-align:center; opacity:0;">
+            <p class="text-stat" style="color:#fff; margin:0;">100%</p>
+            <p class="text-label" style="color:rgba(255,255,255,0.5); margin-top:8px;">Your Sign-off Required</p>
+          </div>
+        </div>
+        <div class="divider-dark" style="margin-top:48px;"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PROCESS                                     -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="process" aria-label="Our 6-step process" style="position:relative; background:#F5F5F5;">
+      <div class="site-container">
+
+        <!-- Section header -->
+        <div style="padding: 80px 0 64px;">
+          <div class="divider-light" style="margin-bottom:40px;"></div>
+          <div class="proc-header-grid">
+            <div>
+              <p id="proc-label" class="text-label" style="color:#8A8A8A; margin:0 0 16px; opacity:0;">How We Work</p>
+              <h2 id="proc-h2" class="text-display" style="color:#000; margin:0; opacity:0;">
+                Six steps to your <span style="color:#FA4A49;">finished home.</span>
+              </h2>
+            </div>
+            <div style="display:flex; align-items:flex-end;">
+              <p id="proc-body" class="text-body-l" style="color:#000; margin:0; opacity:0;">
+                Every project we take on follows the same disciplined process — built over 26 years to keep you informed, protected, and genuinely excited at every stage from the first conversation to the final handover.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── STEP 1 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row" data-step="1" aria-label="Step 1: The First Conversation">
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80"
+                alt="Friendly client consultation — the starting point of every CAD Express project"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">01</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 01</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">The First Conversation</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              Every project starts with a simple phone call or home visit — no pressure, no obligation. We listen to your vision, understand your lifestyle, and get a real feel for your space. This conversation shapes everything that follows.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">Free consultation</span>
+              <span class="pill">On-site or by phone</span>
+              <span class="pill">30–60 minutes</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ─── STEP 2 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row flip" data-step="2" aria-label="Step 2: Scoping Your Project">
+          <!-- Content (DOM-first so it reads naturally, visual swap via CSS order) -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">02</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 02</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">Scoping Your Project &amp; Honest Budgeting</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              We walk through your space and put together a detailed scope of work with transparent costs discussed upfront — no surprises down the road. You'll receive a clear, itemised breakdown so you can make fully informed decisions.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">Full site assessment</span>
+              <span class="pill">Detailed cost breakdown</span>
+              <span class="pill">Scope of work document</span>
+            </div>
+          </div>
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80"
+                alt="Site assessment — documenting scope, measurements, and existing conditions"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </article>
+
+        <!-- ─── STEP 3 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row" data-step="3" aria-label="Step 3: Design and Specification Drawings">
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80"
+                alt="Designer drafting detailed specifications — the precision work behind every CAD Express drawing"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">03</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 03</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">Design &amp; Specification Drawings</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              Using professional CAD software, we produce precise architectural drawings and specification documents. You see exactly what we're building before a single tool is picked up — no guesswork, no assumptions, no nasty surprises.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">CAD drawings</span>
+              <span class="pill">Spec documents</span>
+              <span class="pill">Revisions included</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ─── STEP 4 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row flip" data-step="4" aria-label="Step 4: Approvals, Permits and Alignment">
+          <!-- Content -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">04</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 04</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">Approvals, Permits &amp; Getting Aligned</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              We handle all permit filings and county approvals on your behalf. We walk you through the complete project timeline, confirm every selection, and ensure we are fully aligned before a single nail is driven. No work begins without your sign-off.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">Permit filing handled</span>
+              <span class="pill">Full timeline walkthrough</span>
+              <span class="pill">Your sign-off required</span>
+            </div>
+          </div>
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
+                alt="Reviewing and signing off on project permits and approvals"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </article>
+
+        <!-- ─── STEP 5 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row" data-step="5" aria-label="Step 5: The Build">
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1485083269755-a7b559a4fe5e?w=800&q=80"
+                alt="Construction cranes and active build site — CAD Express crews at work"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">05</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 05</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">The Build — With You in the Loop</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              With 26 years of experience, our crews handle the unexpected professionally. We update you regularly, flag gray areas before acting on them, and never make a decision that affects your home without your knowledge.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">Regular updates</span>
+              <span class="pill">No surprises policy</span>
+              <span class="pill">26 years of experience</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ─── STEP 6 ─── -->
+        <div class="divider-light"></div>
+        <article class="step-row flip" data-step="6" aria-label="Step 6: Final Walkthrough and Handover">
+          <!-- Content -->
+          <div class="step-txt-col" style="display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div class="step-watermark" aria-hidden="true">06</div>
+            <p class="text-label" style="color:#FA4A49; margin:0 0 12px; position:relative; z-index:1;">Step 06</p>
+            <h3 class="text-heading-l" style="color:#000; margin:0 0 20px; position:relative; z-index:1;">Final Walkthrough &amp; Handover</h3>
+            <p class="text-body-l" style="color:#8A8A8A; margin:0 0 28px; position:relative; z-index:1;">
+              We walk through the finished space together — room by room, detail by detail — until everything meets your expectations. Touch-ups handled on the spot. Only when you're fully satisfied do we call it complete.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+              <span class="pill">Room-by-room review</span>
+              <span class="pill">On-site touch-ups</span>
+              <span class="pill">100% satisfaction</span>
+            </div>
+          </div>
+          <!-- Image -->
+          <div class="step-img-col">
+            <div class="step-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
+                alt="Beautifully finished living space — the result of CAD Express's meticulous process"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </article>
+
+        <div class="divider-light" style="margin-bottom:80px;"></div>
+
+      </div><!-- /site-container -->
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- CTA                                         -->
+    <!-- ══════════════════════════════════════════ -->
+    <section aria-label="Call to action" style="position:relative; background:#000; padding:96px 0;">
+      <div class="site-container">
+        <div class="divider-dark" style="margin-bottom:64px;"></div>
+
+        <div class="cta-grid">
+          <!-- Text -->
+          <div>
+            <p id="cta-label" class="text-label" style="color:#FA4A49; margin:0 0 16px; opacity:0;">Get Started</p>
+            <h2 id="cta-h2" class="text-display" style="color:#fff; margin:0 0 16px; opacity:0;">Ready to Start the Conversation?</h2>
+            <p id="cta-sub" class="text-body-l" style="color:rgba(255,255,255,0.7); max-width:520px; margin:0; opacity:0;">
+              No commitment. Just a friendly call about your project.
+            </p>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display:flex; flex-direction:column; gap:12px; justify-content:flex-end;" id="cta-buttons">
+            <a href="tel:+14045578414" id="cta-btn1" class="btn-primary" style="opacity:0;">Call Us Today</a>
+            <a href="https://cad-new-3d.vercel.app/contact" id="cta-btn2" class="btn-secondary" style="opacity:0;">Send a Message</a>
+          </div>
+        </div>
+
+        <div class="divider-dark" style="margin-top:64px;"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- FOOTER                                      -->
+    <!-- ══════════════════════════════════════════ -->
+    <footer role="contentinfo" style="position:relative; background:#000; padding:120px 0 80px;">
+      <div class="site-container">
+
+        <!-- Logo + Contact row -->
+        <div id="footer-top" style="display:flex; flex-direction:column; gap:24px; margin-bottom:32px; opacity:0;" class="lg:flex-row lg:items-center lg:justify-between">
+          <img
+            src="https://cad-new-3d.vercel.app/images/CAD-Express-Logo-B.png"
+            alt="CAD Express"
+            style="height:36px; width:auto; filter:brightness(0) invert(1); flex-shrink:0;"
+          />
+          <div style="display:flex; flex-direction:column; gap:12px;" class="sm:flex-row sm:gap-32">
+            <a
+              href="tel:+14045578414"
+              class="text-body-m"
+              style="color:rgba(255,255,255,0.7); text-decoration:none; transition:color 0.3s ease;"
+              onmouseenter="this.style.color='#FA4A49'"
+              onmouseleave="this.style.color='rgba(255,255,255,0.7)'"
+            >(404) 557-8414</a>
+            <a
+              href="mailto:info@cadexpressinc.com"
+              class="text-body-m"
+              style="color:rgba(255,255,255,0.7); text-decoration:none; transition:color 0.3s ease;"
+              onmouseenter="this.style.color='#FA4A49'"
+              onmouseleave="this.style.color='rgba(255,255,255,0.7)'"
+            >info@cadexpressinc.com</a>
+          </div>
+        </div>
+
+        <div class="divider-dark" style="margin-bottom:48px;"></div>
+
+        <!-- Brand statement -->
+        <div id="footer-brand" style="text-align:center; margin-bottom:64px; opacity:0;">
+          <h2 class="text-display" style="color:#fff; margin:0 0 16px;">CAD Express</h2>
+          <p class="text-heading-l" style="color:rgba(255,255,255,0.6); margin:0 0 8px;">INNOVATIVE CUSTOM DESIGN HOMES</p>
+          <p class="text-heading-l" style="color:rgba(255,255,255,0.35); margin:0;">TAILORED TO YOUR NEEDS</p>
+        </div>
+
+        <!-- Copyright -->
+        <div id="footer-bottom" style="display:flex; flex-direction:column; align-items:center; gap:16px; opacity:0;" class="sm:flex-row sm:justify-between">
+          <span class="text-body-s" style="color:rgba(255,255,255,0.4);">© Copyright CAD Express. All rights reserved.</span>
+          <div style="display:flex; gap:24px;" class="text-body-s" style="color:rgba(255,255,255,0.4);">
+            <span
+              class="text-body-s"
+              style="color:rgba(255,255,255,0.4); cursor:pointer; transition:color 0.3s ease;"
+              onmouseenter="this.style.color='rgba(255,255,255,0.8)'"
+              onmouseleave="this.style.color='rgba(255,255,255,0.4)'"
+            >Privacy Policy</span>
+            <span class="text-body-s" style="color:rgba(255,255,255,0.4);">|</span>
+            <span
+              class="text-body-s"
+              style="color:rgba(255,255,255,0.4); cursor:pointer; transition:color 0.3s ease;"
+              onmouseenter="this.style.color='rgba(255,255,255,0.8)'"
+              onmouseleave="this.style.color='rgba(255,255,255,0.4)'"
+            >Terms of Service</span>
+          </div>
+        </div>
+
+      </div>
+    </footer>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCRIPTS                                     -->
+    <!-- ══════════════════════════════════════════ -->
+    <style>
+      @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+      /* Footer tagline: scale down on small screens to avoid awkward wraps */
+      @media (max-width: 600px) {
+        #footer-brand .text-heading-l { font-size: 16px; letter-spacing: 0.04em; }
+      }
+
+      /* Section header grids — stacked on mobile, grid on desktop */
+      .proc-header-grid { display: flex; flex-direction: column; gap: 24px; }
+      .cta-grid { display: flex; flex-direction: column; gap: 40px; }
+
+      /* Nav: mobile-first visibility */
+      #desktop-nav { display: none; align-items: center; gap: 24px; }
+      #hamburger   { display: flex; }
+
+      /* Desktop overrides */
+      @media (min-width: 1024px) {
+        #desktop-nav { display: flex; }
+        #hamburger   { display: none !important; }
+        #mobile-menu { display: none !important; }
+        #stats-grid  { grid-template-columns: repeat(4, 1fr); }
+
+        /* Process section header: 5/7 grid */
+        .proc-header-grid {
+          display: grid;
+          grid-template-columns: 5fr 7fr;
+          gap: 48px;
+          align-items: end;
+        }
+
+        /* CTA grid: 8/4 split */
+        .cta-grid {
+          display: grid;
+          grid-template-columns: 8fr 4fr;
+          gap: 48px;
+          align-items: center;
+        }
+
+        /* Footer top: row */
+        #footer-top {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+        #footer-top > div { flex-direction: row; gap: 32px; }
+        #footer-bottom { flex-direction: row; justify-content: space-between; }
+      }
+    </style>
+
+    <script>
+      // Prevent browser from restoring scroll position on load
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+
+    gsap.registerPlugin(ScrollTrigger);
+
+      // ─── Respect prefers-reduced-motion ───
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ─── Page Loader ───
+      const loader    = document.getElementById('loader');
+      const loaderFill = document.getElementById('loader-bar-fill');
+
+      if (!reduced) {
+        gsap.to(loaderFill, {
+          width: '100%',
+          duration: 0.7,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            gsap.to(loader, {
+              opacity: 0,
+              duration: 0.35,
+              delay: 0.1,
+              onComplete: () => {
+                loader.style.display = 'none';
+                runHeroEntrance();
+              }
+            });
+          }
+        });
+      } else {
+        loader.style.display = 'none';
+        // Instantly reveal all opacity-0 elements
+        document.querySelectorAll('[style*="opacity:0"]').forEach(el => {
+          el.style.opacity = '1';
+        });
+      }
+
+      // ─── Hero Entrance ───
+      function runHeroEntrance() {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        tl.fromTo('#h-label',  { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55 })
+          .fromTo('#h-line1',  { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65 }, '-=0.35')
+          .fromTo('#h-line2',  { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65 }, '-=0.50')
+          .fromTo('#h-sub',    { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease:'power2.out' }, '-=0.40')
+          .fromTo('#h-cta',    { opacity: 0         }, { opacity: 1, duration: 0.45 }, '-=0.30')
+          .fromTo('#h-year',   { opacity: 0         }, { opacity: 1, duration: 0.45 }, '-=0.40')
+          .fromTo('#h-scroll', { opacity: 0         }, { opacity: 1, duration: 0.45 }, '-=0.35');
+      }
+
+      // ─── Hero Parallax ───
+      gsap.to('#hero-bg', {
+        yPercent: 18,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: 'body',
+          start: 'top top',
+          end: '+=100%',
+          scrub: true
+        }
+      });
+
+      // ─── Nav Scroll Glass Effect ───
+      const nav = document.getElementById('site-nav');
+      ScrollTrigger.create({
+        start: 'top -60px',
+        onEnter:     () => nav.classList.add('scrolled'),
+        onLeaveBack: () => nav.classList.remove('scrolled')
+      });
+
+      // ─── Mobile Hamburger ───
+      const hamburger  = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      hamburger.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        hamburger.classList.toggle('open', isOpen);
+        hamburger.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      // ─── Stats Strip ───
+      gsap.fromTo('.stat-item',
+        { y: 28, opacity: 0 },
+        {
+          y: 0, opacity: 1,
+          duration: 0.6,
+          stagger: 0.12,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '#stats-grid', start: 'top 82%', once: true }
+        }
+      );
+
+      // ─── Process Section Header ───
+      const procTl = gsap.timeline({
+        scrollTrigger: { trigger: '#proc-label', start: 'top 85%', once: true }
+      });
+      procTl
+        .fromTo('#proc-label', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' })
+        .fromTo('#proc-h2',    { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }, '-=0.35')
+        .fromTo('#proc-body',  { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.40');
+
+      // ─── Process Step Cards ───
+      document.querySelectorAll('article.step-row').forEach((card) => {
+        const isFlip   = card.classList.contains('flip');
+        const imgCol   = card.querySelector('.step-img-col');
+        const txtCol   = card.querySelector('.step-txt-col');
+        const label    = txtCol.querySelector('.text-label');
+        const heading  = txtCol.querySelector('h3');
+        const body     = txtCol.querySelector('p.text-body-l');
+        const pills    = txtCol.querySelectorAll('.pill');
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: card, start: 'top 76%', once: true }
+        });
+
+        // Image slides in from the outer edge
+        tl.fromTo(imgCol,
+          { x: isFlip ? 48 : -48, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.75, ease: 'power2.out' }
+        );
+
+        // Text content reveals with slight stagger
+        tl.fromTo(label,
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.50, ease: 'power2.out' },
+          '-=0.55'
+        )
+        .fromTo(heading,
+          { y: 24, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.60, ease: 'power2.out' },
+          '-=0.42'
+        )
+        .fromTo(body,
+          { y: 18, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' },
+          '-=0.42'
+        )
+        .fromTo(pills,
+          { y: 10, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.40, stagger: 0.07, ease: 'power2.out' },
+          '-=0.35'
+        );
+
+        // Hover lift
+        card.addEventListener('mouseenter', () => gsap.to(card, { y: -4, duration: 0.30, ease: 'power2.out' }));
+        card.addEventListener('mouseleave', () => gsap.to(card, { y:  0, duration: 0.30, ease: 'power2.out' }));
+      });
+
+      // ─── CTA Section ───
+      const ctaTl = gsap.timeline({
+        scrollTrigger: { trigger: '#cta-label', start: 'top 82%', once: true }
+      });
+      ctaTl
+        .fromTo('#cta-label', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.50, ease: 'power2.out' })
+        .fromTo('#cta-h2',    { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }, '-=0.32')
+        .fromTo('#cta-sub',   { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.40')
+        .fromTo('#cta-btn1',  { opacity: 0 },         { opacity: 1, duration: 0.40 }, '-=0.30')
+        .fromTo('#cta-btn2',  { opacity: 0 },         { opacity: 1, duration: 0.40 }, '-=0.28');
+
+      // ─── Footer ───
+      gsap.fromTo('#footer-top',
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.60, ease: 'power2.out',
+          scrollTrigger: { trigger: '#footer-top', start: 'top 88%', once: true } }
+      );
+      gsap.fromTo('#footer-brand',
+        { y: 28, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.70, delay: 0.15, ease: 'power2.out',
+          scrollTrigger: { trigger: '#footer-brand', start: 'top 88%', once: true } }
+      );
+      gsap.fromTo('#footer-bottom',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.50, delay: 0.30, ease: 'power2.out',
+          scrollTrigger: { trigger: '#footer-bottom', start: 'top 92%', once: true } }
+      );
+
+      // ─── Smooth scroll for anchor CTA ───
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          const target = document.querySelector(a.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - 72;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        });
+      });
+    </script>
+
+  </body>
+</html>
